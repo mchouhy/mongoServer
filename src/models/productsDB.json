@@ -7,8 +7,7 @@
     "stock": 200,
     "code": "kwy266",
     "status": true,
-    "category": "muebles",
-    "id": 1
+    "category": "muebles"
   },
   {
     "title": "Silla Amazonas",
@@ -18,8 +17,7 @@
     "stock": 200,
     "code": "sdi545",
     "status": true,
-    "category": "muebles",
-    "id": 2
+    "category": "muebles"
   },
   {
     "title": "Mesa Pampa",
@@ -29,8 +27,7 @@
     "stock": 200,
     "code": "xyt389",
     "status": true,
-    "category": "muebles",
-    "id": 3
+    "category": "muebles"
   },
   {
     "title": "Vela Sofía",
@@ -40,8 +37,7 @@
     "stock": 200,
     "code": "rsj735",
     "status": true,
-    "category": "muebles",
-    "id": 4
+    "category": "muebles"
   },
   {
     "title": "Espejo Sol",
@@ -51,8 +47,7 @@
     "stock": 200,
     "code": "fef545",
     "status": true,
-    "category": "muebles",
-    "id": 6
+    "category": "muebles"
   },
   {
     "title": "Biblioteca Camaro",
@@ -62,8 +57,7 @@
     "stock": 200,
     "code": "hsd542",
     "status": true,
-    "category": "muebles",
-    "id": 5
+    "category": "muebles"
   },
   {
     "title": "Lámpara Magnolia",
@@ -73,8 +67,7 @@
     "stock": 200,
     "code": "usx439",
     "status": true,
-    "category": "muebles",
-    "id": 7
+    "category": "muebles"
   },
   {
     "title": "Banco Guayaba",
@@ -84,8 +77,7 @@
     "stock": 200,
     "code": "oif592",
     "status": true,
-    "category": "muebles",
-    "id": 8
+    "category": "muebles"
   },
   {
     "title": "Manta Amalia",
@@ -95,8 +87,7 @@
     "stock": 200,
     "code": "tid883",
     "status": true,
-    "category": "muebles",
-    "id": 9
+    "category": "muebles"
   },
   {
     "title": "Sofá Ana",
@@ -106,7 +97,6 @@
     "stock": 200,
     "code": "yeg219",
     "status": true,
-    "category": "muebles",
-    "id": 10
+    "category": "muebles"
   }
 ]

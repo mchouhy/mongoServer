@@ -11,11 +11,11 @@ import { router } from './routes/views.router.js';
 // Importación del router de productos:
 import { productsRouter } from './routes/products.router.js';
 // Importación del router de carts:
-import { cartsRouter } from './routes/carts.router.js'
+import { cartsRouter } from './routes/carts.router.js';
 // Importación del Socket.io (https://socket.io/docs/v4/tutorial/introduction):
 import { Server } from 'socket.io';
 // Importación del manejador de productos.
-import { ProductManager } from './controllers/productManager.js'
+import { ProductManager } from './controllers/productManager.js';
 // Llamado de la función constructora.
 const productManager = new ProductManager;
 
@@ -28,12 +28,12 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 // Directorio raíz desde el cual deben leerse los archivos con la extensión ".handlebars":
 app.set('views', './src/views');
-
+// Middleware que permite analizar los cuerpos de las solicitudes con datos codificados en URL y hacerlos accesibles en req.body:
 app.use(express.urlencoded({extended: true}));
 // Función que permite comunicarnos con el servidor en formato JSON:
 app.use(express.json());
 // Endpoint de la ruta de products:
-app.use('/api/products', productsRouter);
+app.use('/products', productsRouter);
 // Endpoint de la ruta de carts:
 app.use('/api/carts', cartsRouter)
 // Endpoint de la ruta "home.handlebars":

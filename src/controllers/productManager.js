@@ -1,96 +1,36 @@
 // Importación del módulo nativo de Node: "FileSystem", específicamente el de promesas, asignado a la variable "fs".
 import { promises as fs } from "fs"
+// Importación de model de productos:
+import { productModel } from "../models/products.model.js";
 
-//Función de clase constructora que recibe la ruta a trabajar desde el momento de generar la instancia.
+//Función de clase constructora que recibe la ruta a trabajar desde el momento de generar la instancia:
 export class ProductManager {
-
-      constructor() {
-            this.path = './src/models/productsDB.json'
-      }
-
-      // Funciones que leen el archivo json en el cual se guardan los objetos de productos, ejecuta el "parse" para transformar el JSON a objeto y devuelve el array de objetos de productos contenidos el archivo JSON.
-      getProducts = async () => {
+      // Función que agrega los objetos de productos a Mongo Atlas:
+      addProduct = async ({title, description, code, price, stock, category, thumbnails}) => {
             try {
-                  const productsDB = await this.readDB()
-                  return productsDB
-            } catch (error) {
-                  console.log("Error al consultar el stock de la base de datos.")
-            }
-      }
-
-      readDB = async () => {
-            try {
-                  const response = await fs.readFile(this.path, "utf-8")
-                  const productsDBContent = JSON.parse(response)
-                  return productsDBContent
-
-            } catch (error) {
-                  console.log('Error al leer la base de datos', error)
-                  throw error
-            }
-
-      }
-      // Función que busca en el archivo JSON que guarda los objetos de productos el producto que coincida con el id ingresado por argumento.
-      // En caso de no existir un producto con el id ingresado por argumento se retorna un mensaje de error.
-      // En caso de que exista un producto con el id ingresado por argumento se retorna el producto en cuestión.
-      getProductById = async (prodId) => {
-            try {
-                  const response = await this.getProducts()
-                  const product = response.find(prod => prod.id === prodId)
-                  if (product) {
-                        return product
-                  } else {
-                        console.log(`Error. El producto con el id: ${prodId} no existe.`)
+                  if(!title || !description || !code || !price || !stock || !category || !thumbnails) {
+                        return console.log("Error. Es obligatorio completar todos los campos para agregar el producto.");
                   }
-            } catch (error) {
-                  console.log('No existe un producto identificado con el id ingresado', error)
-            }
-      }
 
-      // Función que agrega los objetos de productos al archivo JSON, validando previamente el cumplimiento de las condiciones de la preentrega.
-      addProduct = async (product) => {
-            try {
-                  //Lectura del archivo JSON y parse.
-                  const productsDB = await this.readDB()
+                  const existingProduct = await productModel.findOne({code: code});
+                  if(existingProduct) {
+                        return console.log("Error. Ya existe un producto en la base de datos con el código ingresado. Intente nuevamente.");
+                  }
+
+                  const newProduct = new productModel({
+                        title,
+                        description,
+                        code,
+                        price,
+                        stock,
+                        category,
+                        thumbnails: thumbnails || [],
+                        status: true
+                  });
+
+                  newProduct.save();
                  
-                  // Validación 1: Mensaje de error en caso de que el "code" del producto agregado ya exista.
-                  const repeatedCode = productsDB.find(prod => prod.code === product.code)
-                  if (repeatedCode) {
-                  throw new Error(`El producto: "${product.title}" no pudo ser agregado porque ya existe un producto con el código ingresado.`)
-                  }
-
-                  // Validación 2: Mensaje de error en caso de que se omita completar una propiedad del producto a agregar.
-                  if(   !product.title 
-                     || !product.description 
-                     || !product.code 
-                     || !product.price 
-                     || !product.stock
-                     || !product.category) {
-                  throw new Error(`Error. Debes completar todos los campos para agregar el producto exitosamente.`)
-                        }
-
-                  // Variable que guarda el nuevo producto.
-                  const newProduct = {
-                        title: product.title,
-                        description: product.description,
-                        code: product.code,
-                        price: product.price,
-                        status: product.status === false ? false : true,
-                        stock: product.stock,
-                        category: product.category,
-                        thumbnails: product.thumbnails || []
-                  }
-                  // Validación 3: Creación de un id autoincremental en cada producto agregado.
-                  let lastId = 0;
-                  if (productsDB.length > 0) {
-                  lastId = productsDB[productsDB.length - 1].id;
-                  }
-                  newProduct.id = parseInt(lastId) + 1;
-                  // Se agrega al nuevo producto al array.
-                  productsDB.push(newProduct);
-                  // Se agrega el nuevo producto al archivo JSON
-                  await fs.writeFile(this.path, JSON.stringify(productsDB, null, 2), "utf-8");
-                  console.log(`Producto: ${product.title} agregado con éxito.`);
+                  
             } catch (error) {
                   console.log(`Error al agregar el producto: ${product.title}.`, error);
             }
