@@ -7,13 +7,13 @@ const productsRouter = Router();
 // Llamado de la función constructora:
 const productManager = new ProductManager;
 // Importación del model de productos:
-import { productsModel } from "../models/products.model.js";
+import { productModel } from "../models/products.model.js";
 
 // Rutas de productos:
 // Get que retorna todos los productos o los productos limitados aplicando un query.
 productsRouter.get("/", async (request, response) => {
     try {  
-        let products = await productsModel.find();
+        let products = await productModel.find();
         response.send({message: "sucess", payload: products})
     } catch (error) {
         console.log('Error al obtener los productos de Mongoose.', error);

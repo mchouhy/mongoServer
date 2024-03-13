@@ -1,9 +1,7 @@
-// Importación del módulo nativo de Node: "FileSystem", específicamente el de promesas, asignado a la variable "fs".
-import { promises as fs } from "fs"
 // Importación de model de productos:
 import { productModel } from "../models/products.model.js";
 
-//Función de clase constructora que recibe la ruta a trabajar desde el momento de generar la instancia:
+//Función de clase manejadora de los productos:
 export class ProductManager {
       // Función que agrega los objetos de productos a Mongo Atlas:
       addProduct = async ({title, description, code, price, stock, category, thumbnails}) => {
@@ -29,10 +27,8 @@ export class ProductManager {
                   });
 
                   newProduct.save();
-                 
-                  
             } catch (error) {
-                  console.log(`Error al agregar el producto: ${product.title}.`, error);
+                  console.log(`Error al intentar agregar el producto: ${title}.`, error);
             }
       }
 

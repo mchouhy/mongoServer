@@ -18,6 +18,8 @@ import { Server } from 'socket.io';
 import { ProductManager } from './controllers/productManager.js';
 // Llamado de la función constructora.
 const productManager = new ProductManager;
+// Importación de la conexión a la base de datos de Mongo Atlas:
+import "./mongoDB.js";
 
 
 // Directorio raíz desde el cual Express servirá los archivos estáticos cuando se realicen solicitudes HTTP:

@@ -7,7 +7,7 @@ import { ProductManager } from '../controllers/productManager.js'
 // Llamado de la función constructora:
 export const productManager = new ProductManager;
 // Importación del modelo de productos:
-import { productsModel } from '../models/products.model.js';
+import { productModel } from '../models/products.model.js';
 
 // Ruta GET para renderizar el home.handlebars:
 router.get('/', async (request, response) => {
