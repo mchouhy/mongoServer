@@ -7,7 +7,7 @@ const cartSchema = new mongoose.Schema({
             {
                   product: {
                         type: mongoose.Schema.Types.ObjectId,
-                        ref: 'Product',
+                        reference: 'Product',
                         required: true
                   },
                   quantity: {
@@ -19,10 +19,10 @@ const cartSchema = new mongoose.Schema({
 });
 
 // Middleware pre que realiza la población automáticamente - "pre hook":
-cartSchema.pre('findOne', (next) => {
-      this.populate('products.product', '_id title price');
-      next();
-});
+// cartSchema.pre('findOne', (next) => {
+//       this.populate('products.product', '_id title price');
+//       next();
+// });
 
 // Exportación del model:
 export const cartsModel = mongoose.model("carts", cartSchema);

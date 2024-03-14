@@ -3,15 +3,41 @@ import { productModel } from "../models/products.model.js";
 
 //Función de clase manejadora de los productos:
 export class ProductManager {
-      // Función que agrega los objetos de productos a Mongo Atlas:
-      addProduct = async ({title, description, code, price, stock, category, thumbnails}) => {
+      // Función que trae los productos de la base de datos de Mongo Atlas:
+      getProducts = async () => {
             try {
-                  if(!title || !description || !code || !price || !stock || !category || !thumbnails) {
+                  const products = productModel.find();
+                  if(!products) {
+                       return console.log("No existen productos agregados a la base de datos.");
+                  }
+                  return products;
+            } catch (error) {
+                  console.log("Error al intentar ejecutar getProducts", error);
+            }
+      }
+
+      // Función que trae productos por id:
+      getProductById = async () => {
+            try {
+                  const product = productModel.findById();
+                  if(!product) {
+                        return console.log("No existe un producto con el id ingresado.");
+                  }
+                  return product    
+            } catch (error) {
+                  console.log("Error al intentar ejecutar getProductById", error);
+            }
+            
+      }
+      // Función que agrega los objetos de productos a Mongo Atlas:
+      addProduct = async ({ title, description, code, price, stock, category, thumbnails }) => {
+            try {
+                  if (!title || !description || !code || !price || !stock || !category || !thumbnails) {
                         return console.log("Error. Es obligatorio completar todos los campos para agregar el producto.");
                   }
 
-                  const existingProduct = await productModel.findOne({code: code});
-                  if(existingProduct) {
+                  const existingProduct = await productModel.findOne({ code: code });
+                  if (existingProduct) {
                         return console.log("Error. Ya existe un producto en la base de datos con el código ingresado. Intente nuevamente.");
                   }
 
@@ -33,7 +59,7 @@ export class ProductManager {
       }
 
       // Función que actualiza las propiedades de los objetos de productos almacenados en el archivo JSON. Si no existe el producto que se pretende actualizar se devuelve un mensaje de error.
-      updateProduct = async (prodId, {title, description, price, thumbnails, code, stock, status, category}) => {
+      updateProduct = async (prodId, { title, description, price, thumbnails, code, stock, status, category }) => {
             try {
                   //Lectura del archivo JSON y parse.
                   const productsDB = await this.getProducts()
@@ -77,5 +103,5 @@ export class ProductManager {
             }
 
       }
-      
+
 }

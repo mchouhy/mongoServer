@@ -6,22 +6,24 @@ import { CartManager } from "../controllers/cartManager.js"
 const cartsRouter = Router()
 // Llamado de la función constructora.
 const cartManager = new CartManager
+// Importación del model de productos:
+import { cartModel } from "../models/carts.model.js";
+
 
 // Rutas de carts:
-
 // Post que crea un nuevo cart.
 cartsRouter.post("/", async (request, response) => {
     try {
-        const newCart = await cartManager.createCart()
-        response.json(newCart)
+        const newCart = await cartManager.createCart();
+        response.json(newCart);
     } catch (error) {
-        response.status(500).json({ error: 'Error al crear el cart.' })
+        response.status(500).json({ error: 'Error al crear el cart.' });
     }
 })
 
 // Get que lista los productos que pertenezcan al cart por id.
 cartsRouter.get("/:cid", async (request, response) => {
-    const cartId = parseInt(request.params.cid)
+    const cartId = request.params.cid;
     try {
         const cart = await cartManager.getCartById(cartId);
         response.json(cart.products);
@@ -32,9 +34,9 @@ cartsRouter.get("/:cid", async (request, response) => {
 
 // Post que agrega como objeto el producto al array de products del cart seleccionado.
 cartsRouter.post("/:cid/product/:pid", async (request, response) => {
-    const cartId = parseInt(request.params.cid)
-    const prodId  = request.params.pid
-    const quantity = request.body.quantity || 1;
+    const { cartId } = request.params;
+    const { prodId } = request.params;
+    const { quantity } = request.body || 1;
     try {
         const updateCart = await cartManager.addProduct(cartId, prodId, quantity);
         response.json(updateCart.products);

@@ -15,7 +15,11 @@ const productSchema = new mongoose.Schema({
             type: Number,
             required: true
       },
+      img: {
+            type: String,
+      },
       thumbnails: {
+            // Un array de strings.
             type: [String]
       },
       stock: {
@@ -24,7 +28,9 @@ const productSchema = new mongoose.Schema({
       },
       code: {
             type: String,
-            required: true
+            required: true,
+            // Ponemos unique porque tendremos una validación que no permita agregar dos productos con el mismo código.
+            unique: true
       },
       status: {
             type: Boolean,
@@ -36,6 +42,6 @@ const productSchema = new mongoose.Schema({
       }
 });
 
-// Exportación del model:
+// Exportación del model. En model se pasa como primer argumento el nombre de la colección y como segundo el "Schema":
 export const productModel = mongoose.model("products", productSchema);
 
