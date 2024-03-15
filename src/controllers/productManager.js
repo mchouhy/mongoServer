@@ -42,7 +42,7 @@ export class ProductManager {
                         return console.log("Error. Ya existe un producto en la base de datos con el código ingresado. Intente nuevamente.");
                   }
                   // Variable que guarda el nuevo producto si se pasan las validaciones:
-                  const newProduct = {
+                  const newProduct = new productModel({
                         title,
                         description,
                         code,
@@ -51,7 +51,7 @@ export class ProductManager {
                         category,
                         thumbnails: thumbnails || [],
                         status: true
-                  };
+                  });
                   // Función de mongoose que guarda el nuevo producto en la base de datos:
                   await newProduct.save();
             } catch (error) {
