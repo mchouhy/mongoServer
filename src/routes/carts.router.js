@@ -30,7 +30,7 @@ cartsRouter.get("/:cid", async (request, response) => {
 })
 
 // Post que agrega como objeto el producto al array de products del cart seleccionado:
-cartsRouter.post("/:cid/product/:pid", async (request, response) => {
+cartsRouter.post("/:cartId/product/:prodId", async (request, response) => {
     const { cartId } = request.params;
     const { prodId } = request.params;
     const { quantity } = request.body || 1;

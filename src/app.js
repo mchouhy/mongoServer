@@ -35,7 +35,7 @@ app.use(express.urlencoded({extended: true}));
 // Función que permite comunicarnos con el servidor en formato JSON:
 app.use(express.json());
 // Endpoint de la ruta de products:
-app.use('/products', productsRouter);
+app.use('/api/products', productsRouter);
 // Endpoint de la ruta de carts:
 app.use('/api/carts', cartsRouter)
 // Endpoint de la ruta "home.handlebars":
