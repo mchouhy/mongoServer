@@ -24,5 +24,5 @@ const cartSchema = new mongoose.Schema({
 //       next();
 // });
 
-// Exportación del model:
+// Exportación del model para utilizarlo en cartManager.js. En model se pasa como primer argumento el nombre de la colección y como segundo el "Schema":
 export const cartsModel = mongoose.model("carts", cartSchema);

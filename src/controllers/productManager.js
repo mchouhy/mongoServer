@@ -6,9 +6,9 @@ export class ProductManager {
       // Función que trae los productos de la base de datos de Mongo Atlas:
       getProducts = async () => {
             try {
-                  const products = productModel.find();
-                  if(!products) {
-                       return console.log("No existen productos agregados a la base de datos.");
+                  const products = await productModel.find();
+                  if (!products) {
+                        return console.log("No existen productos agregados a la base de datos.");
                   }
                   return products;
             } catch (error) {
@@ -17,31 +17,32 @@ export class ProductManager {
       }
 
       // Función que trae productos por id:
-      getProductById = async () => {
+      getProductById = async (id) => {
             try {
-                  const product = productModel.findById();
-                  if(!product) {
+                  const product = await productModel.findById(id);
+                  if (!product) {
                         return console.log("No existe un producto con el id ingresado.");
                   }
-                  return product    
+                  return product;
             } catch (error) {
                   console.log("Error al intentar ejecutar getProductById", error);
             }
-            
+
       }
       // Función que agrega los objetos de productos a Mongo Atlas:
       addProduct = async ({ title, description, code, price, stock, category, thumbnails }) => {
             try {
+                  // Validación para que de error en caso de que falte completar un campo requerido:
                   if (!title || !description || !code || !price || !stock || !category || !thumbnails) {
                         return console.log("Error. Es obligatorio completar todos los campos para agregar el producto.");
                   }
-
+                  // Función de mongoose que busca si existe un producto con la propiedad pasada por parámetro:
                   const existingProduct = await productModel.findOne({ code: code });
                   if (existingProduct) {
                         return console.log("Error. Ya existe un producto en la base de datos con el código ingresado. Intente nuevamente.");
                   }
-
-                  const newProduct = new productModel({
+                  // Variable que guarda el nuevo producto si se pasan las validaciones:
+                  const newProduct = {
                         title,
                         description,
                         code,
@@ -50,35 +51,23 @@ export class ProductManager {
                         category,
                         thumbnails: thumbnails || [],
                         status: true
-                  });
-
-                  newProduct.save();
+                  };
+                  // Función de mongoose que guarda el nuevo producto en la base de datos:
+                  await newProduct.save();
             } catch (error) {
                   console.log(`Error al intentar agregar el producto: ${title}.`, error);
             }
       }
 
       // Función que actualiza las propiedades de los objetos de productos almacenados en el archivo JSON. Si no existe el producto que se pretende actualizar se devuelve un mensaje de error.
-      updateProduct = async (prodId, { title, description, price, thumbnails, code, stock, status, category }) => {
+      updateProduct = async (id, updatedProduct) => {
             try {
-                  //Lectura del archivo JSON y parse.
-                  const productsDB = await this.getProducts()
-                  const productToUpdate = productsDB.find(prod => prod.id === prodId)
-                  if (productToUpdate) {
-                        productToUpdate.title = title || productToUpdate.title
-                        productToUpdate.description = description || productToUpdate.description
-                        productToUpdate.price = price || productToUpdate.price
-                        productToUpdate.thumbnails = thumbnails || productToUpdate.thumbnails
-                        productToUpdate.code = code || productToUpdate.code
-                        productToUpdate.stock = stock || productToUpdate.stock
-                        productToUpdate.status = status || productToUpdate.status
-                        productToUpdate.category = category || productToUpdate.category
-                        const updatedProductsToJSON = JSON.stringify(productsDB, null, 2)
-                        await fs.writeFile(this.path, updatedProductsToJSON, 'utf-8')
-                        return console.log(`El producto con el id: ${prodId} se ha actualizado con éxito en la base de datos. Estos son sus detalles actualizados: `, productToUpdate)
-                  } else {
-                        return console.log(`Error al actualizar. No existe un producto en la base de datos con el número de id: ${prodId}.`)
+                  // Función de mongoose que busca en la base de datos por id y actualiza el producto:
+                  const updateProduct = await productModel.findByIdAndUpdate(id, updatedProduct);
+                  if (!updateProduct) {
+                        return console.log("No existe un producto con el id ingresado");
                   }
+                  return console.log(`El producto con el id: ${id} se ha actualizado con éxito en la base de datos. Estos son sus detalles actualizados: `, updateProduct);
             } catch (error) {
                   console.log('Error al leer la base de datos, intente nuevamente.', error)
 
@@ -86,22 +75,15 @@ export class ProductManager {
 
       }
 
-      deleteProductById = async (prodId) => {
+      deleteProductById = async (id) => {
             try {
-                  //Lectura del archivo JSON y parse.
-                  const productsDB = await this.getProducts()
-                  const indexToRemove = productsDB.findIndex(prod => prod.id === prodId)
-                  if (indexToRemove !== -1) {
-                        productsDB.splice(indexToRemove, 1)
-                        await fs.writeFile(this.path, JSON.stringify(productsDB, null, 2), 'utf-8')
-                        return console.log(`El producto identificado con el id: ${prodId} ha sido eliminado con éxito y se ha actualizado el listado de productos.`)
-                  } else {
-                        return console.log(`Error al eliminar. El producto identificado con el id: ${prodId} no existe.`)
+                  const deleteProduct = await productModel.findByIdAndDelete(id);
+                  if (!deleteProduct) {
+                        return console.log("No existe un producto con el id ingresado");
                   }
+                  return console.log(`El producto con el id: ${id} se ha eliminado con éxito en la base de datos. Este es el producto que fue eliminado: `, deleteProduct);
             } catch (error) {
-                  console.log('Error al consultar la base de datos.', error)
+                  console.log('Error al eliminar el producto de la base de datos.', error)
             }
-
       }
-
 }
