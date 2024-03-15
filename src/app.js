@@ -14,13 +14,10 @@ import { productsRouter } from './routes/products.router.js';
 import { cartsRouter } from './routes/carts.router.js';
 // Importación del Socket.io (https://socket.io/docs/v4/tutorial/introduction):
 import { Server } from 'socket.io';
-// Importación del manejador de productos.
-import { ProductManager } from './controllers/productManager.js';
-// Llamado de la función constructora.
-const productManager = new ProductManager;
 // Importación de la conexión a la base de datos de Mongo Atlas:
 import "./mongoDB.js";
-
+// Importación del model de mensajes:
+import { messageModel } from './models/messages.model.js';
 
 // Directorio raíz desde el cual Express servirá los archivos estáticos cuando se realicen solicitudes HTTP:
 app.use(express.static('./src/public'))
@@ -31,7 +28,7 @@ app.set('view engine', 'handlebars');
 // Directorio raíz desde el cual deben leerse los archivos con la extensión ".handlebars":
 app.set('views', './src/views');
 // Middleware que permite analizar los cuerpos de las solicitudes con datos codificados en URL y hacerlos accesibles en req.body:
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 // Función que permite comunicarnos con el servidor en formato JSON:
 app.use(express.json());
 // Endpoint de la ruta de products:
@@ -45,36 +42,15 @@ app.use('/', router);
 const httpServer = app.listen(PORT, () => console.log(`Escuchando cualquier cambio en el puerto ${PORT}`));
 // Generación de una instancia del módulo socket pasando por argumento la referencia del servidor de Express JS:
 const io = new Server(httpServer);
-// Configuración del primer evento que escucha las peticiones del cliente ("connection: nombre del evento"):
+
 io.on("connection", (socket) => {
-      console.log("Cliente conectado.");
+      console.log("Un cliente conectado");
 
-      socket.on("client-message", (data) => {
-            console.log(data);
-      });
-
-      socket.emit("server-message", "Soy el servidor enviando un mensaje.");
-
-      socket.on("addProduct", async (data) => {
-            try {
-                  await productManager.addProduct(data);
-                  socket.emit("sucess", {message: `Producto agregado con éxito.`});
-                  const productsDB = await productManager.getProducts();
-                  socket.emit("products", productsDB);
-            } catch (error) {
-                  socket.emit("error", "Error al agregar el producto");
-            }
+      socket.on("message", async (data) => {
+            // Guardado del mensaje en la colección de mensajes de la base de datos de Mongo Atlas:
+            await messageModel.create(data);
+            // Obtención de los mensajes de Mongo Atlas y envío al cliente:
+            const messages = await messageModel.find();
+            io.emit("message", messages);      
       })
-
-      socket.on("deleteProduct", async (data) => {
-            try {
-                  await productManager.deleteProductById(data);
-                  socket.emit("sucess", {message: `Producto eliminado con éxito.`});
-                  const productsDB = await productManager.getProducts();
-                  socket.emit("products", productsDB);
-            } catch (error) {
-                  socket.emit("error", "Error al eliminar el producto");
-            }
-      })
-});
-
+})

@@ -2,34 +2,13 @@
 import express from 'express';
 // Creación del Router de Express JS:
 const router = express.Router();
-// Importación del manejador de productos:
-import { ProductManager } from '../controllers/productManager.js'
-// Llamado de la función constructora:
-export const productManager = new ProductManager;
-// Importación del modelo de productos:
-import { productModel } from '../models/products.model.js';
 
-// Ruta GET para renderizar el home.handlebars:
+// Ruta GET para renderizar el chat.handlebars:
 router.get('/', async (request, response) => {
       try {
-            const title = "Listado de productos";
-            const products = await productManager.getProducts();
-            response.render('home', { title, products });
+            response.render("chat");
       } catch (error) {
-            console.log('Error al obtener los productos.', error);
-            response.status(500).json({ error: 'Error al obtener los productos' });
-      }
-})
-
-// Ruta GET para renderizar el realTimeProducts.handlebars:
-router.get('/realTimeProducts', async (request, response) => {
-      try {
-            const title = "Productos en tiempo real";
-            const products = await productManager.getProducts();
-            response.render('realTimeProducts', { title: title, products: products });
-            
-      } catch (error) {
-            console.log('Error al obtener los productos.', error);
+            console.log('Error al obtener los mensajes del chat.', error);
             response.status(500).json({ error: 'Error al obtener los productos' });
       }
 })
