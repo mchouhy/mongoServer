@@ -44,7 +44,7 @@ const httpServer = app.listen(PORT, () => console.log(`Escuchando cualquier camb
 const io = new Server(httpServer);
 
 io.on("connection", (socket) => {
-      console.log("Un cliente conectado");
+      console.log("Un cliente se ha conectado.");
 
       socket.on("message", async (data) => {
             // Guardado del mensaje en la colección de mensajes de la base de datos de Mongo Atlas:

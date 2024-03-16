@@ -34,11 +34,11 @@ chatBox.addEventListener("keyup", (event) => {
 });
 
 // Se reciben los mensajes y se muestran por pantalla: 
-socket.on("messagesLogs", (data) => {
+socket.on("message", (data) => {
       let log = document.getElementById("messagesLogs");
       let mensajes = "";
       data.forEach(mensaje => {
-            mensajes = mensajes + `${mensaje.user} dice: ${mensaje.message} <br>`;
+            mensajes = mensajes + `<div class="flex justify-center p-1">${mensaje.user} dice: ${mensaje.message}</div><br>`;
       })
       log.innerHTML = mensajes;
 });
