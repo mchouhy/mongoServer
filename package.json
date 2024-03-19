@@ -1,5 +1,5 @@
 {
-  "name": "wsockets-hbars",
+  "name": "mongo-server",
   "version": "1.0.0",
   "description": "Challenge 5 - Coderhouse Backend Course",
   "main": "app.js",
